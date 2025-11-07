@@ -1,5 +1,12 @@
 {
   "files.associations": {
-    "*.tcc": "cpp"
+    "*.tcc": "cpp",
+    "cstddef": "cpp",
+    "unordered_map": "cpp",
+    "istream": "cpp",
+    "numeric": "cpp",
+    "ostream": "cpp",
+    "sstream": "cpp",
+    "cmath": "cpp"
   }
 }

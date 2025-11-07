@@ -5,5 +5,6 @@
 #include "PIT/pit.hpp"
 #include "PWM/pwm.hpp"
 #include "ADC/ADC.hpp"
+#include "UART/uart.hpp"
 
 #endif
