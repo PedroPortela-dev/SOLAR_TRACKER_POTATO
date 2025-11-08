@@ -1,16 +1,5 @@
-/**
- * @file drv_wifi.h
- * @author Pedro Portela Rodrigues (pedro.rodrigues@fbest.org.br)
- * @brief 
- * @version 1.0
- * @date 2023-09-29
- *
- * @copyright Copyright (c) 2023
- *
- */
-
-#ifndef WIFI_DRV_
-#define WIFI_DRV_
+#ifndef WIFI_HPP
+#define WIFI_HPP
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -33,4 +22,4 @@ void wifi_start(char * ssid, char * password);
 
 bool wifi_connected();
 
-#endif /* WIFI_DRV */
+#endif
