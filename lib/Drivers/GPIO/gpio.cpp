@@ -24,7 +24,7 @@ void Gpio::init(gpio_mode_t mode)
 
     gpio_config_t config = {
         .pin_bit_mask = 1ULL << m_pin,
-        .mode = GPIO_MODE_INPUT,
+        .mode = mode,
         .pull_up_en = m_pullup,
         .pull_down_en = m_pulldown,
         .intr_type = GPIO_INTR_DISABLE,

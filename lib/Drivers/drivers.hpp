@@ -6,5 +6,7 @@
 #include "PWM/pwm.hpp"
 #include "ADC/ADC.hpp"
 #include "UART/uart.hpp"
+#include "NVS/nvs.hpp"
+#include "WiFi/Wifi.hpp"
 
 #endif

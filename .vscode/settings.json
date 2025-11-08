@@ -7,6 +7,18 @@
     "numeric": "cpp",
     "ostream": "cpp",
     "sstream": "cpp",
-    "cmath": "cpp"
+    "cmath": "cpp",
+    "iosfwd": "cpp",
+    "limits": "cpp",
+    "streambuf": "cpp",
+    "system_error": "cpp",
+    "array": "cpp",
+    "functional": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp",
+    "memory": "cpp",
+    "compare": "cpp",
+    "string": "cpp"
   }
 }

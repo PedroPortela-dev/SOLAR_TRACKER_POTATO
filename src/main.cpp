@@ -1,24 +1,37 @@
 #include "drivers.hpp"
 #include "devices.hpp"
 
-uart ss;
-TinyGPS gps;
+uart gps_uart;
 Pit timer;
-Gpio led(GPIO_NUM_2);
+Nvs storage;
+Pit mqtt_timer;
 
-uart terminal;
+TinyGPS gps;
+MQTT mqtt;
 
 extern "C" void app_main()
 {
-    ss.init(UART_NUM_2, 9600, 17, 16); // RX=16, TX=17
+    gps_uart.init(UART_NUM_2, 9600, 17, 16);
     timer.init();
-    gps.init();
-    led.init(GPIO_MODE_OUTPUT);
-
     timer.start();
+    storage.init();
 
-    printf("Simple TinyGPS library v. %d\n", TinyGPS::library_version());
-    printf("by Portelinha\n\n");
+    wifi_start("CIMATEC-VISITANTE", "");
+
+    while(!wifi_connected())
+    {
+        vTaskDelay(1);
+
+        if(timer.read())
+        {
+            timer.write(1000);
+            printf("Connecting to WiFi...\n");
+        }
+    }
+
+    mqtt.init(1883, "mqtt://test.mosquitto.org");
+
+    gps.init();
 
     while (1)
     {
@@ -28,15 +41,12 @@ extern "C" void app_main()
         unsigned short sentences, failed;
         uint8_t c;
 
-        // For one second we parse GPS data and report some key values
     
-        while (ss.data_len())
+        while (gps_uart.data_len())
         {
-            ss.read(&c, 1);
+            gps_uart.read(&c, 1);
             if (gps.encode(c))
                 newData = true;
-
-            printf("%c", c);
         }
 
         if (newData)
@@ -51,13 +61,25 @@ extern "C" void app_main()
                 gps.satellites() == TinyGPS::GPS_INVALID_SATELLITES ? 0 : gps.satellites(),
                 gps.hdop() == TinyGPS::GPS_INVALID_HDOP ? 0 : gps.hdop()
             );
-            gps.stats(&chars, &sentences, &failed);
-    
-            printf(" CHARS=%lu SENTENCES=%hu CSUM ERR=%hu\n", chars, sentences, failed);
 
-            led.toggle();
-        }  
+            storage["latitude"] = flat;
+            storage["longitude"] = flon;
+        }
 
+        if(timer.read())
+        {
+            float latitude = storage["latitude"];
+            float longitude = storage["longitude"];
+
+            char payload[100];
+            snprintf(payload, sizeof(payload), "{\"latitude\": %.6f, \"longitude\": %.6f }", latitude, longitude);
+            mqtt.write("esp32/gps", payload);
+
+            timer.write(10000); // 5 seconds
+        }
+
+
+        
         vTaskDelay(1);
     }
     
